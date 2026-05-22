@@ -1,0 +1,111 @@
+// Version: 1.0.0
+type CampaignStatus__153263443 = {#completed; #paused; #pending; #running};
+type Campaign__66651877 =
+  {
+    clientIds : [Text];
+    createdAt : Timestamp__301639476;
+    delaySecs : Nat;
+    id : Id__389469852;
+    listId : Id__389469852;
+    mediaPath : ?Text;
+    message : Text;
+    messageType : MessageType__133222335;
+    name : Text;
+    scheduledAt : ?Timestamp__301639476;
+    sentCount : Nat;
+    startedAt : ?Timestamp__301639476;
+    status : CampaignStatus__153263443;
+    totalCount : Nat
+  };
+type ClientStatus__586235630 =
+  {
+    clientId : Text;
+    connected : Bool;
+    lastSeenAt : ?Timestamp__301639476;
+    name : Text;
+    phone : ?Text
+  };
+type ContactList__324214048 =
+  {
+    createdAt : Timestamp__301639476;
+    description : Text;
+    id : Id__389469852;
+    name : Text
+  };
+type Contact__1066054361 =
+  {
+    createdAt : Timestamp__301639476;
+    id : Id__389469852;
+    listId : Id__389469852;
+    name : Text;
+    phone : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Id__389469852 = Nat;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MessageLog__710281535 =
+  {
+    campaignId : Id__389469852;
+    contactId : Id__389469852;
+    error : ?Text;
+    id : Id__389469852;
+    messagePreview : Text;
+    phone : Text;
+    sentAt : Timestamp__301639476;
+    status : MessageStatus__32568974
+  };
+type MessageStatus__32568974 = {#failed; #sent};
+type MessageType__133222335 = {#document; #imageText; #text; #videoText};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Timestamp__301639476 = Int;
+actor {
+  stable campaignsState :
+    {
+      campaigns : Map__605269027<Id__389469852, Campaign__66651877>;
+      counter : {var nextId : Id__389469852};
+      logCounter : {var nextId : Id__389469852};
+      logs : Map__605269027<Id__389469852, MessageLog__710281535>
+    };
+  stable clientsState :
+    {clients : Map__605269027<Text, ClientStatus__586235630>};
+  stable contactsState :
+    {
+      contacts : Map__605269027<Id__389469852, Contact__1066054361>;
+      counters :
+        {var nextContactId : Id__389469852; var nextListId : Id__389469852};
+      lists : Map__605269027<Id__389469852, ContactList__324214048>
+    };
+  stable groupsContactsState :
+    {
+      contacts : Map__605269027<Id__389469852, Contact__1066054361>;
+      counters :
+        {var nextContactId : Id__389469852; var nextListId : Id__389469852}
+    };
+  stable logsState :
+    {
+      counter : {var nextId : Id__389469852};
+      logs : Map__605269027<Id__389469852, MessageLog__710281535>
+    };
+  stable sharedLogCounter : {var nextId : Nat};
+  stable sharedLogsMap :
+    {
+      var root : Node__46230540<Id__389469852, MessageLog__710281535>;
+      var size : Nat__490723111
+    };
+  stable statsState :
+    {
+      campaigns : Map__605269027<Id__389469852, Campaign__66651877>;
+      clients : Map__605269027<Text, ClientStatus__586235630>;
+      contactLists : Map__605269027<Id__389469852, ContactList__324214048>
+    }
+};

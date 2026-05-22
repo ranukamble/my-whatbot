@@ -1,0 +1,23 @@
+{
+  "overview": "A WhatsApp automation dashboard for managing campaigns, contacts, and simulated WhatsApp clients with real-time polling.",
+  "features": [
+    "6-page dashboard with sidebar navigation",
+    "Dashboard with live stats and client status grid",
+    "WhatsApp client manager with mock QR code connection flow",
+    "Contacts management with CSV import, search, and bulk delete",
+    "Campaign creation with delay slider, message templates, and progress tracking",
+    "Message history with filters, CSV export, and pagination",
+    "Group contact extractor with save-to-list functionality",
+    "Purple/violet accent theme with gradient hero banner"
+  ],
+  "category": "dashboard",
+  "tags": [
+    "whatsapp",
+    "automation",
+    "campaigns",
+    "contacts",
+    "messaging",
+    "productivity"
+  ],
+  "last_updated": "2026-05-22T09:58:17.502Z"
+}

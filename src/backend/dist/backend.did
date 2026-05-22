@@ -1,0 +1,142 @@
+type Timestamp = int;
+type MessageType = 
+ variant {
+   document;
+   imageText;
+   "text";
+   videoText;
+ };
+type MessageStatus = 
+ variant {
+   failed;
+   sent;
+ };
+type MessageLogInput = 
+ record {
+   campaignId: Id;
+   contactId: Id;
+   error: opt text;
+   messagePreview: text;
+   phone: text;
+   status: MessageStatus;
+ };
+type MessageLog = 
+ record {
+   campaignId: Id;
+   contactId: Id;
+   error: opt text;
+   id: Id;
+   messagePreview: text;
+   phone: text;
+   sentAt: Timestamp;
+   status: MessageStatus;
+ };
+type MessageFilter = 
+ record {
+   campaignId: opt Id;
+   fromTime: opt Timestamp;
+   status: opt MessageStatus;
+   toTime: opt Timestamp;
+ };
+type Id = nat;
+type GroupContact = 
+ record {
+   isAdmin: bool;
+   name: text;
+   phone: text;
+ };
+type DashboardStats = 
+ record {
+   connectedClients: nat;
+   runningCampaigns: nat;
+   totalCampaigns: nat;
+   totalClients: nat;
+   totalContactLists: nat;
+ };
+type ContactList = 
+ record {
+   createdAt: Timestamp;
+   description: text;
+   id: Id;
+   name: text;
+ };
+type ContactInput = 
+ record {
+   name: text;
+   phone: text;
+ };
+type Contact = 
+ record {
+   createdAt: Timestamp;
+   id: Id;
+   listId: Id;
+   name: text;
+   phone: text;
+ };
+type ClientStatus = 
+ record {
+   clientId: text;
+   connected: bool;
+   lastSeenAt: opt Timestamp;
+   name: text;
+   phone: opt text;
+ };
+type CampaignStatus = 
+ variant {
+   completed;
+   paused;
+   pending;
+   running;
+ };
+type CampaignRequest = 
+ record {
+   clientIds: vec text;
+   delaySecs: nat;
+   listId: Id;
+   mediaPath: opt text;
+   message: text;
+   messageType: MessageType;
+   name: text;
+   scheduledAt: opt Timestamp;
+ };
+type Campaign = 
+ record {
+   clientIds: vec text;
+   createdAt: Timestamp;
+   delaySecs: nat;
+   id: Id;
+   listId: Id;
+   mediaPath: opt text;
+   message: text;
+   messageType: MessageType;
+   name: text;
+   scheduledAt: opt Timestamp;
+   sentCount: nat;
+   startedAt: opt Timestamp;
+   status: CampaignStatus;
+   totalCount: nat;
+ };
+service : {
+  addContact: (listId: Id, name: text, phone: text) -> (Id);
+  addMessageLog: (log: MessageLogInput) -> (Id);
+  connectClient: (clientId: text) -> (bool);
+  createCampaign: (req: CampaignRequest) -> (Id);
+  createContactList: (name: text, description: text) -> (Id);
+  deleteCampaign: (id: Id) -> (bool);
+  deleteContact: (id: Id) -> (bool);
+  deleteContactList: (id: Id) -> (bool);
+  disconnectClient: (clientId: text) -> (bool);
+  extractGroupContacts: (groupId: text, clientId: text) -> (vec GroupContact);
+  getCampaigns: () -> (vec Campaign) query;
+  getClientStatuses: () -> (vec ClientStatus) query;
+  getContactLists: () -> (vec ContactList) query;
+  getContactsInList: (listId: Id) -> (vec Contact) query;
+  getDashboardStats: () -> (DashboardStats) query;
+  getMessageLogs: (filter: MessageFilter) -> (vec MessageLog) query;
+  importContacts: (listId: Id, contacts: vec ContactInput) -> (nat);
+  pauseCampaign: (id: Id) -> (bool);
+  saveGroupContactsToList: (listId: Id, contacts: vec ContactInput) -> (nat);
+  startCampaign: (id: Id) -> (bool);
+  updateClientStatus: (clientId: text, connected: bool, phone: opt text) ->
+   (bool);
+}
